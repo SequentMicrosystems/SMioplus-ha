@@ -3,24 +3,21 @@ DEFAULT_ICONS = {
         "off": "mdi:toggle-switch-variant-off",
 }
 
-import voluptuous as vol
-import libioplus as SMioplus
 import logging
 import time
+import types
 import inspect
+from inspect import signature
 
 from homeassistant.const import (
 	CONF_NAME
 )
 
-from homeassistant.components.light import PLATFORM_SCHEMA
-import homeassistant.helpers.config_validation as cv
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.helpers.entity import generate_entity_id
 
 from . import (
         DOMAIN, CONF_STACK, CONF_TYPE, CONF_CHAN, CONF_NAME,
-        NAME_PREFIX,
         SM_MAP, SM_API
 )
 SM_MAP = SM_MAP["switch"]
@@ -62,6 +59,15 @@ class Switch(SwitchEntity):
             self._SM = self._SM(self._stack)
             self._SM_get = getattr(self._SM, com["get"])
             self._SM_set = getattr(self._SM, com["set"])
+            ### Make API compatible if channel is not used (_)
+            if len(signature(self._SM_get).parameters) == 0:
+                def _aux2_SM_get(self, _):
+                    return getattr(self, com["get"])()
+                self._SM_get = types.MethodType(_aux2_SM_get, self._SM)
+            if len(signature(self._SM_set).parameters) == 1:
+                def _aux2_SM_set(self, _, value):
+                    getattr(self, com["set"])(value)
+                self._SM_set = types.MethodType(_aux2_SM_set, self._SM)
         else:
             def _aux_SM_get(*args):
                 return getattr(self._SM, com["get"])(self._stack, *args)

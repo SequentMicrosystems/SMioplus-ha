@@ -3,7 +3,6 @@ DEFAULT_ICONS = {
         "off": "mdi:numeric-0",
 }
 
-import voluptuous as vol
 import logging
 import time
 import types
@@ -11,10 +10,6 @@ import inspect
 from inspect import signature
 _LOGGER = logging.getLogger(__name__)
 
-import libioplus as SMioplus
-
-from homeassistant.components.light import PLATFORM_SCHEMA
-import homeassistant.helpers.config_validation as cv
 from homeassistant.components.number import NumberEntity
 from homeassistant.helpers.entity import generate_entity_id
 
@@ -73,6 +68,15 @@ class Number(NumberEntity):
             self._SM = self._SM(self._stack)
             self._SM_get = getattr(self._SM, com["get"])
             self._SM_set = getattr(self._SM, com["set"])
+            ### Make API compatible if channel is not used (_)
+            if len(signature(self._SM_get).parameters) == 0:
+                def _aux2_SM_get(self, _):
+                    return getattr(self, com["get"])()
+                self._SM_get = types.MethodType(_aux2_SM_get, self._SM)
+            if len(signature(self._SM_set).parameters) == 1:
+                def _aux2_SM_set(self, _, value):
+                    getattr(self, com["set"])(value)
+                self._SM_set = types.MethodType(_aux2_SM_set, self._SM)
         else:
             def _aux_SM_get(*args):
                 return getattr(self._SM, com["get"])(self._stack, *args)

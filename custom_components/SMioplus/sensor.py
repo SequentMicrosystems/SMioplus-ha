@@ -3,17 +3,12 @@ DEFAULT_ICONS = {
         "off": "mdi:numeric-0",
 }
 
-import voluptuous as vol
 import logging
 import time
 import types
 import inspect
 from inspect import signature
 
-import libioplus as SMioplus
-
-from homeassistant.components.light import PLATFORM_SCHEMA
-import homeassistant.helpers.config_validation as cv
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.entity import generate_entity_id
 
@@ -22,14 +17,6 @@ from . import (
         SM_MAP, SM_API
 )
 SM_MAP = SM_MAP["sensor"]
-
-#SCHEMA_EXTEND = {
-#	vol.Optional(CONF_NAME, default=""): cv.string,
-#	vol.Optional(CONF_STACK, default="0"): cv.string,
-#}
-#for key in SM_SENSOR_MAP:
-#    SCHEMA_EXTEND[vol.Optional(key, default="-1")] = cv.string
-#PLATFORM_SCHEMA = PLATFORM_SCHEMA.extend(SCHEMA_EXTEND)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -61,13 +48,12 @@ class Sensor(SensorEntity):
         self._value = 0
         self.__SM__init()
 
-        # Custom setup
+        # Custom setup END
         # I Don't like this hardcoded setup, maybe add a setup com in data.py
         if self._type == "opto_cnt":
             self._SM.rstOptoCount(self._stack, self._chan)
             ## THIS DOESN"T WORK IDK WHY
-            res = self._SM.cfgOptoEdgeCount(self._stack, self._chan, 1)
-            _LOGGER.error(res) # res is 1, so it SHOULD be working
+            self._SM.cfgOptoEdgeCount(self._stack, self._chan, 1)
         ## END
 
     def __SM__init(self):
@@ -76,6 +62,11 @@ class Sensor(SensorEntity):
         if inspect.isclass(self._SM):
             self._SM = self._SM(self._stack)
             self._SM_get = getattr(self._SM, com["get"])
+            ### Make API compatible if channel is not used (_)
+            if len(signature(self._SM_get).parameters) == 0:
+                def _aux2_SM_get(self, _):
+                    return getattr(self, com["get"])()
+                self._SM_get = types.MethodType(_aux2_SM_get, self._SM)
         else:
             def _aux_SM_get(*args):
                 return getattr(self._SM, com["get"])(self._stack, *args)
