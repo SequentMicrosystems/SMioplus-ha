@@ -20,7 +20,7 @@ from . import (
 )
 SM_MAP = SM_MAP["number"]
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, add_devices, discovery_info=None):
     # We want this platform to be setup via discovery
     if discovery_info == None:
         return

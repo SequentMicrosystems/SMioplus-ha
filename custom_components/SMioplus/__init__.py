@@ -54,7 +54,7 @@ def load_all_platforms(hass, stack=0):
                 )
 
 
-def setup(hass, config):
+async def async_setup(hass, config):
     hass.data[DOMAIN] = []
     card_configs = config.get(DOMAIN)
     if not card_configs:
