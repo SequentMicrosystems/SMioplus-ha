@@ -54,7 +54,7 @@ class Number(NumberEntity):
         self._short_timeout = .05
         self._icons = DEFAULT_ICONS | SM_MAP[self._type].get("icon", {})
         self._icon = self._icons["off"]
-        self._uom = SM_MAP[self._type]["uom"]
+        self._uom = SM_MAP[self._type].get("uom", "")
         self._min_value = SM_MAP[self._type]["min_value"]
         self._max_value = SM_MAP[self._type]["max_value"]
         self._step = SM_MAP[self._type]["step"]

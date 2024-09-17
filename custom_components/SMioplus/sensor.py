@@ -44,7 +44,7 @@ class Sensor(SensorEntity):
         self._short_timeout = .05
         self._icons = DEFAULT_ICONS | SM_MAP[self._type].get("icon", {})
         self._icon = self._icons["off"]
-        self._uom = SM_MAP[self._type]["uom"]
+        self._uom = SM_MAP[self._type].get("uom", "")
         self._value = 0
         self.__SM__init()
 
