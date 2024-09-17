@@ -11,17 +11,16 @@ SM_MAP = {
             },
         }
     },
-    "sensor":  {
+    "binary_sensor": {
         "opto": {
                 "chan_no": 8,
                 "uom": "",
                 "com": {
                     "get": "getOptoCh",
                 },
-                "icon": {
-                    "on": "mdi:numeric-1",
-                }
         },
+    },
+    "sensor":  {
         "opto_cnt": {
                 "chan_no": 8,
                 "uom": "",
