@@ -2,9 +2,9 @@ DEFAULT_ICONS = {
         "off": "mdi:button-pointer",
 }
 
+import types
 import inspect
-import voluptuous as vol
-import libioplus as SMioplus
+from inspect import signature
 import logging
 import time
 
@@ -12,8 +12,6 @@ from homeassistant.const import (
 	CONF_NAME
 )
 
-from homeassistant.components.light import PLATFORM_SCHEMA
-import homeassistant.helpers.config_validation as cv
 from homeassistant.components.button import ButtonEntity
 from homeassistant.helpers.entity import generate_entity_id
 
@@ -25,7 +23,7 @@ SM_MAP = SM_MAP["button"]
 
 _LOGGER = logging.getLogger(__name__)
 
-def setup_platform(hass, config, add_devices, discovery_info=None):
+async def async_setup_platform(hass, config, add_devices, discovery_info=None):
     # We want this platform to be setup via discovery
     if discovery_info == None:
         return
@@ -57,10 +55,21 @@ class Button(ButtonEntity):
         if inspect.isclass(self._SM):
             self._SM = self._SM(self._stack)
             self._SM_set = getattr(self._SM, com["set"])
+            ### Make API compatible if channel is not used (_)
+            if len(signature(self._SM_set).parameters) == 1:
+                def _aux2_SM_set(self, _, value):
+                    getattr(self, com["set"])(value)
+                self._SM_set = types.MethodType(_aux2_SM_set, self._SM)
         else:
-            def _aux_SM_set(*args):
-                return getattr(self._SM, com["set"])(self._stack, *args)
-            self._SM_set = _aux_SM_set
+            _SM_set = getattr(self._SM, com["set"])
+            if len(signature(_SM_set).parameters) == 2:
+                def _aux3_SM_set(_, *args):
+                    return _SM_set(self._stack, *args)
+                self._SM_set = _aux3_SM_set
+            else:
+                def _aux_SM_set(*args):
+                    return _SM_set(self._stack, *args)
+                self._SM_set = _aux_SM_set
 
     @property
     def unique_id(self):

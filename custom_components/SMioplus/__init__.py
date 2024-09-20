@@ -7,6 +7,7 @@ from homeassistant.helpers import config_validation as cv
 from homeassistant.const import (
 	CONF_NAME
 )
+from homeassistant.helpers.discovery import load_platform
 
 from . import data
 DOMAIN = data.DOMAIN
@@ -18,6 +19,7 @@ CONF_NAME = CONF_NAME
 CONF_STACK = "stack"
 CONF_TYPE = "type"
 CONF_CHAN = "chan"
+CONF_CHAN_RANGE = "chan_range"
 COM_NOGET = "__NOGET__"
 
 
@@ -30,14 +32,14 @@ CONFIG_SCHEMA = vol.Schema({
 
 _LOGGER = logging.getLogger(__name__)
 
-def load_platform(hass, entity_config):
+async def SM_load_platform(hass, entity_config):
         for platform_type, attr in SM_MAP.items():
             if entity_config[CONF_TYPE] in attr:
-                hass.helpers.discovery.load_platform(
-                        platform_type, DOMAIN, entity_config, {}
+                load_platform(
+                        hass, platform_type, DOMAIN, entity_config, {}
                 )
 
-def load_all_platforms(hass, stack=0):
+async def SM_load_all_platforms(hass, stack=0):
     for platform_type, platform in SM_MAP.items():
         for type, attr in platform.items():
             if attr.get("optional", False):
@@ -49,36 +51,54 @@ def load_all_platforms(hass, stack=0):
                         CONF_TYPE: type,
                         CONF_CHAN: chan+1
                 }
-                hass.helpers.discovery.load_platform(
-                        platform_type, DOMAIN, entity_config, {}
+                load_platform(
+                        hass, platform_type, DOMAIN, entity_config, {}
                 )
 
 
-def setup(hass, config):
+async def async_setup(hass, config):
     hass.data[DOMAIN] = []
     card_configs = config.get(DOMAIN)
     if not card_configs:
-        load_all_platforms(hass, stack=0)
+        await SM_load_all_platforms(hass, stack=0)
         return True
     for card_config in card_configs:
         stack = int(card_config.pop(CONF_STACK, 0))
         if not card_config:
-            load_all_platforms(hass, stack=stack)
+            await SM_load_all_platforms(hass, stack=stack)
             continue
         for entity in card_config:
+            card_config[entity] = card_config[entity] or {}
+            chan_range = card_config[entity].get(CONF_CHAN_RANGE, "")
             try:
-                [type, chan] = entity.rsplit("_", 1)
-                chan = int(chan)
+                [chan_start, chan_end] = chan_range.split("..", 1)
+                chan_start = int(chan_start)
+                chan_end = int(chan_end)
+                type = entity
+                for chan in range(chan_start, chan_end + 1, 1):
+                    #_LOGGER.error("DEBUG chan: %d", chan)
+                    entity_config = card_config[entity].copy()
+                    entity_config |= {
+                        CONF_NAME: NAME_PREFIX + str(stack) + "_" + entity + "_" + str(chan),
+                        CONF_STACK: stack,
+                        CONF_TYPE: type,
+                        CONF_CHAN: chan
+                    }
+                    _LOGGER.error("DEBUG chan from config: %d", entity_config[CONF_CHAN])
+                    await SM_load_platform(hass, entity_config)
             except:
-                _LOGGER.error(entity, " doesn't respect type_channel format")
-                continue
-            entity_config = card_config[entity] or {}
-            entity_config |= {
-                    CONF_NAME: NAME_PREFIX + str(stack) + "_" + entity,
-                    CONF_STACK: stack,
-                    CONF_TYPE: type,
-                    CONF_CHAN: chan
-            }
-            load_platform(hass, entity_config)
-        
+                try:
+                    [type, chan] = entity.rsplit("_", 1)
+                    chan = int(chan)
+                except:
+                    _LOGGER.error("%s doesn't respect type_channel format", entity)
+                    continue
+                entity_config = card_config[entity].copy()
+                entity_config |= {
+                        CONF_NAME: NAME_PREFIX + str(stack) + "_" + entity,
+                        CONF_STACK: stack,
+                        CONF_TYPE: type,
+                        CONF_CHAN: chan
+                }
+                await SM_load_platform(hass, entity_config)
     return True
