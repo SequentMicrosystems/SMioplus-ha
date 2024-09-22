@@ -49,11 +49,7 @@ class Switch(SwitchEntity):
         self._icon = self._icons["off"]
         self.__SM__init()
         self._is_on = self._SM_get(self._chan)
-        ### CUSTOM_SETUP START
-        if self._type == "opto_cnt":
-            #self._SM.rstOptoCount(self._stack, self._chan)
-            self._SM.cfgOptoEdgeCount(self._stack, self._chan, 1)
-        ### CUSTOM_SETUP END
+	        ### CUSTOM_SETUP START
 
     def __SM__init(self):
         com = SM_MAP[self._type]["com"]
@@ -92,7 +88,6 @@ class Switch(SwitchEntity):
 
     def update(self):
         time.sleep(self._short_timeout)
-        self._SM.cfgOptoEdgeCount(self._stack, self._chan, 1)
         try:
             self._is_on = self._SM_get(self._chan)
         except Exception as ex:

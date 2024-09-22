@@ -100,14 +100,27 @@ SMioplus:
     - stack: 3
 ```
 
-- Only specific entities:
+- Only specific entities for different stack levels:
 
 ```yaml
 SMioplus:
     - stack: 0
-        relay_1:
-        relay_2:
-        opto_4:
-    - stack: 1
-        od_3:
+      relay_1:
+      relay_3:
+      opto_1:
+        update_interval: 0.1
+    - stack: 2
+      relay:
+        chan_range: "1..8"
+      opto_cnt:
+        chan_range: "2..6"
+        update_interval: 1
 ```
+
+### `configuration.yaml` entities
+
+Find possible entities in [data.py](https://github.com/SequentMicrosystems/SMioplus-ha/blob/master/custom_components/SMioplus/data.py)
+
+Entity options:
+- `chan_range: "start..end"` (specify inclusive channel range)
+- `update_interval: seconds` (specify the update interval for `sensor` and `binary_sensor`, default 30s)
