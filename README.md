@@ -1,6 +1,6 @@
 # Sequent Microsystems Home Automation Home Assistant Integration
 
-Integrate [Home Automation Stackable Card for Raspberry Pi](https://sequentmicrosystems.com/products/raspberry-pi-home-automation-card)
+Integrate [Home Automation](https://sequentmicrosystems.com/products/raspberry-pi-home-automation-card)
 seamlessly with Home Assistant, bringing all your custom functionality into the Home Assistant ecosystem for enhanced control, automation, and ease of use.
 
 
@@ -14,7 +14,7 @@ seamlessly with Home Assistant, bringing all your custom functionality into the 
 
 - [video]() for step 1.
 - [video]() for steps 2. and 3. 
-- [video]() for steps 4. and 5.
+- [video]() for steps 4. and 5. 
 
 
 #### Prerequirements
@@ -117,9 +117,21 @@ SMioplus:
         update_interval: 1
 ```
 
+[//]: # (__CUSTOM_README__ START)
+[//]: # (__CUSTOM_README__ END)
+
 ### `configuration.yaml` entities
 
-Find possible entities in [data.py](https://github.com/SequentMicrosystems/SMioplus-ha/blob/master/custom_components/SMioplus/data.py)
+Possible entities:
+```
+opto_cnt_rst_1: -> opto_cnt_rst_8:  (type: button)
+dac_1: -> dac_4:  (type: number)
+od_1: -> od_4:  (type: number)
+adc_1: -> adc_8:  (type: sensor)
+opto_1: -> opto_8:  (type: sensor)
+opto_cnt_1: -> opto_cnt_8:  (type: sensor)
+relay_1: -> relay_8:  (type: switch)
+```
 
 Entity options:
 - `chan_range: "start..end"` (specify inclusive channel range)

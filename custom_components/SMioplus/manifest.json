@@ -1,6 +1,6 @@
 {
 	"domain": "SMioplus",
-	"name": "Sequent Microsystems Home Automation Integraion",
+	"name": "Sequent Microsystems Home Automation Integration",
 	"version": "1.0.0",
 	"integration_type": "device",
 	"documentation": "https://github.com/SequentMicrosystems/SMioplus-ha",
@@ -9,5 +9,5 @@
 	"after_dependencies": [],
 	"codeownders": ["3lv"],
 	"config_flow": false,
-	"requirements": ["SMioplus>=1.0.5"]
+	"requirements": ["SMioplus>=1.0.0"]
 }

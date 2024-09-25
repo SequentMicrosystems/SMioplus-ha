@@ -1,3 +1,6 @@
+FULL_NAME="Home Automation"
+LINK="https://sequentmicrosystems.com/products/raspberry-pi-home-automation-card"
+
 import libioplus
 API = libioplus
 DOMAIN = "SMioplus"

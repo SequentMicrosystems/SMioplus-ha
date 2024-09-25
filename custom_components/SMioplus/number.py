@@ -60,7 +60,8 @@ class Number(NumberEntity):
         self._step = SM_MAP[self._type]["step"]
         self._value = 0
         self.__SM__init()
-	        ### CUSTOM_SETUP START
+        ### __CUSTOM_SETUP__ START
+        ### __CUSTOM_SETUP__ END
 
     def __SM__init(self):
         com = SM_MAP[self._type]["com"]
