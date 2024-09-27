@@ -13,9 +13,8 @@ seamlessly with Home Assistant, bringing all your custom functionality into the 
 #### Video tutorials
 
 - [Install HACS video](https://youtu.be/Fl3lATWhQVM) for step 1.
-- [Enable I2C and Install file editor video](https://youtu.be/53Zj8NofS7k) for steps 2. and 3. 
-- [Install and config card drivers video](https://youtu.be/yH2HKjm7j24) for steps 4. and 5. 
-
+- [Enable I2C and Install file editor video](https://youtu.be/53Zj8NofS7k) for steps 2. and 3.
+- [Install and config card drivers video](https://youtu.be/yH2HKjm7j24) for steps 4. and 5.
 
 #### Prerequirements
 
@@ -24,15 +23,15 @@ seamlessly with Home Assistant, bringing all your custom functionality into the 
 
 2. Install and run HassOS I2C Configurator add-on
     - Install [HassOS I2C Configurator](https://my.home-assistant.io/redirect/supervisor_add_addon_repository/?repository_url=https%3A%2F%2Fgithub.com%2Fadamoutler%2FHassOSConfigurator)
-    - Select your profile from the bottom left corner and enable `Advanced mode` in User settings
+    - Select your profile from the buttom left corner and enable `Advanced mode` in User settings
     - In Settings, Add-ons, Add-on Store, search and install `HassOS I2C Configurator`
     - Disable `Protection mode`
     - Start the add-on
 
 3. Install File editor add-on
     - In Settings, Add-ons, Add-on Store, search and install `File editor`
-    - Enable `Show in the sidebar`
-(see multiple config options below)
+    - Enable `Show in sidebar`
+(see multiple config options bellow)
 
 
 ### The actual installation
@@ -40,10 +39,10 @@ seamlessly with Home Assistant, bringing all your custom functionality into the 
 4. Install SMioplus-ha from HACS
     - Open HACS (from the sidebar)
     - Click on the 3 dots in the top right corner and select `Custom repositories`
-    - Repository is `SequentMicrosystems/SMioplus-ha` and the type is `Integration`
-    - Once added, you can now search for it in the HACS menu and download it
+    - Repository is `SequentMicrosystems/SMioplus-ha` and type is `Integration`
+    - Once added, you can now search it in HACS menu and download it
 
-5. Add SMioplus config in the configuration.yaml
+5. Add SMioplus config in configuration.yaml
     - In the sidebar, select `File editor` and start the add-on
     - Click the folder icon from the top left corner and edit `configuration.yaml`
     - At the end of the file append the SMioplus config:
@@ -55,7 +54,7 @@ seamlessly with Home Assistant, bringing all your custom functionality into the 
 
 6. Reboot system
 
-7. Reboot the system (yes, it must be done twice)
+7. Reboot system (yes, it must be done twice)
 
 
 
@@ -63,7 +62,7 @@ seamlessly with Home Assistant, bringing all your custom functionality into the 
 
 `configuration.yaml` example:
 ```yaml
-# Loads default set of integrations. Please don't remove.
+# Loads default set of integrations. Do not remove.
 default_config:
 
 # Load frontend themes from the themes folder
@@ -101,6 +100,8 @@ SMioplus:
 ```
 
 - Only specific entities for different stack levels:
+
+> The following example is provided for illustrative purposes only and does not necessarily represent real entities.
 
 ```yaml
 SMioplus:
