@@ -101,7 +101,7 @@ SMioplus:
 
 - Only specific entities for different stack levels:
 
-> The following example is provided for illustrative purposes only and does not necessarily represent real entities.
+> !The following example is provided for illustrative purposes only and does NOT necessarily represent real entities!
 
 ```yaml
 SMioplus:
@@ -124,7 +124,7 @@ SMioplus:
 ### `configuration.yaml` entities
 
 Possible entities:
-```
+```yaml
 opto_cnt_rst_1: -> opto_cnt_rst_8:  (type: button)
 dac_1: -> dac_4:  (type: number)
 od_1: -> od_4:  (type: number)
